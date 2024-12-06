@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dee2e6
+            ;
+            padding-top: 20px;
+        }
+        .card {
+            border-radius: 0.5rem;
+        }
+        .card-title {
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(350%);
+            z-index: 1000;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="mb-4">월별 지출</h1>
+
+        {% if context %}
+        <div class="row">
+            {% for key, value in context.items() %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ key }}월</h5>
+                        <p class="card-text">
+                            <div>지출: {{ value }}</div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">지출이 가장 많은 달 : {{ max_expense[0] }}월</h5>
+                        <p class="card-text">{{ max_expense[0] }}월의 지출 : {{ max_expense[1] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>결과가 없습니다.</p>
+        {% endif %}
+        <div><canvas id ="myChart"></canvas></div>
+        <div class="d-grid mt-3">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">홈으로 돌아가기</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            var labels = [ {% for key, value in context.items() %}'{{ key }}월', {% endfor %} ];
+            var dataValues = [ {% for key, value in context.items() %}{{ value }}, {% endfor %} ];
+            var maxIndex = dataValues.indexOf(Math.max.apply(null, dataValues));
+
+            var backgroundColors = dataValues.map((_, index) => index === maxIndex ? 'rgba(255, 99, 132, 0.5)' : 'rgba(0, 123, 255, 0.5)');
+            var borderColors = dataValues.map((_, index) => index === maxIndex ? 'rgba(255, 99, 132, 1)' : 'rgba(0, 123, 255, 1)');
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '지출',
+                        data: dataValues,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
