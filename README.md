@@ -1,8 +1,20 @@
 # household_account_book
 
-가계부 서비스
+<div>
 
-Flask 
+### 맡은역할 (개발기여도: 80%)
+
+웹개발
+
+### 기여한일
+
+1.웹사이트개발(기입, 일/월별조회, 기입내역조회)<br>
+2.가계부알고리즘코딩<br>
+
+### 사용기술
+Python, Flask, HTML
+  
+</div>
 
 
 ![image](https://github.com/user-attachments/assets/909d7961-d2f5-4c43-ba96-1ecb6e631c2c)
